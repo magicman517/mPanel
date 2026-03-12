@@ -23,19 +23,19 @@
     <PackageReference Include="FastEndpoints.Swagger" Version="8.0.1" />
     <PackageReference Include="JetBrains.Annotations" Version="2025.2.4" />
     <PackageReference Include="MailKit" Version="4.15.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="10.0.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="10.0.3" />
-    <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="10.0.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.3">
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="10.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="10.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="10.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
     <PackageReference Include="RedisRateLimiting" Version="1.2.1" />
     <PackageReference Include="RedisRateLimiting.AspNetCore" Version="1.2.1" />
-    <PackageReference Include="Scalar.AspNetCore" Version="2.13.1" />
-    <PackageReference Include="Scriban" Version="6.5.5" />
+    <PackageReference Include="Scalar.AspNetCore" Version="2.13.6" />
+    <PackageReference Include="Scriban" Version="6.5.7" />
     <PackageReference Include="StackExchange.Redis" Version="2.11.8" />
   </ItemGroup>
   <ItemGroup>
