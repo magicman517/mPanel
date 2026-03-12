@@ -1,0 +1,17 @@
+{
+  "$schema": "https://alirezanet.github.io/Husky.Net/schema.json",
+  "tasks": [
+    {
+      "name": "format-api",
+      "command": "dotnet",
+      "args": ["format", "--verify-no-changes"],
+      "cwd": "src/mPanel.API"
+    },
+    {
+      "name": "format-web",
+      "command": "pnpm",
+      "args": ["format:check"],
+      "cwd": "src/mPanel.Web"
+    }
+  ]
+}

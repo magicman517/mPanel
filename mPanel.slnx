@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/mPanel.API/mPanel.API.csproj" />
+    <Project Path="src\mPanel.AppHost\mPanel.AppHost.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/mPanel.Tests.API/mPanel.Tests.API.csproj" />
+    <Project Path="tests/mPanel.Tests.Web/mPanel.Tests.Web.csproj" />
+    <Project Path="tests/mPanel.Tests/mPanel.Tests.csproj" />
+  </Folder>
+</Solution>

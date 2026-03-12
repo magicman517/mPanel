@@ -1,0 +1,8 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Fix formatting errors before committing:
+#   API:  dotnet format src/mPanel.API/mPanel.API.csproj
+#   Web:  pnpm --dir src/mPanel.Web format
+
+dotnet husky run
