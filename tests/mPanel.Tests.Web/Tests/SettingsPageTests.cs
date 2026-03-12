@@ -10,7 +10,7 @@ public class SettingsPageTests(AspireFixture fixture) : TestBase(fixture)
     {
         // Act
         await Page.GotoAsync("/settings");
-        
+
         // Assert
         await Expect(Page).ToHaveURLAsync("/auth");
     }
@@ -27,30 +27,30 @@ public class SettingsPageTests(AspireFixture fixture) : TestBase(fixture)
         // Assert
         var emailField = Page.Locator("input[name='email']");
         var usernameField = Page.Locator("input[name='username']");
-        
+
         await Expect(Page).ToHaveURLAsync("/settings");
         await Expect(Page.Locator("h1")).ToHaveTextAsync("Settings");
         await Expect(emailField).ToHaveValueAsync(authContext.email);
         await Expect(usernameField).ToHaveValueAsync(authContext.username);
     }
-    
+
     [Fact]
     public async Task SettingsPage_UpdateProfile_WithEmptyEmailField_ShowsValidationErrorOnBlur()
     {
         // Arrange
         await AuthenticateAsync();
         await Page.GotoAsync("/settings");
-        
+
         // Act
         var emailField = Page.Locator("input[name='email']");
         await emailField.FillAsync("");
         await emailField.BlurAsync();
-        
+
         // Assert
         var errorMessage = Page.GetByText("Email is required", new PageGetByTextOptions { Exact = true });
         await Expect(errorMessage).ToBeVisibleAsync();
     }
-    
+
     [Fact]
     public async Task SettingsPage_UpdateProfile_WithNewUsername_UpdatesUsernameSuccessfully()
     {
@@ -58,14 +58,32 @@ public class SettingsPageTests(AspireFixture fixture) : TestBase(fixture)
         var newUsername = Faker.Internet.UserName();
         await AuthenticateAsync(true);
         await Page.GotoAsync("/settings");
-        
+
         // Act
         var usernameField = Page.Locator("input[name='username']");
         await usernameField.FillAsync(newUsername);
         await Page.ClickAsync("button[type='submit']");
-        
+
         // Assert
         await Page.ReloadAsync();
         await Expect(usernameField).ToHaveValueAsync(newUsername);
+    }
+
+    [Fact]
+    public async Task SettingsPage_UpdateProfile_WithNewEmail_ShowsModal()
+    {
+        // Arrange
+        var newEmail = Faker.Internet.Email();
+        await AuthenticateAsync(true);
+        await Page.GotoAsync("/settings");
+
+        // Act
+        var emailField = Page.Locator("input[name='email']");
+        await emailField.FillAsync(newEmail);
+        await Page.ClickAsync("button[type='submit']");
+
+        // Assert
+        var message = Page.GetByText($"A confirmation link has been sent to {newEmail}. Click the link in that email to complete the update.");
+        await Expect(message).ToBeVisibleAsync();
     }
 }

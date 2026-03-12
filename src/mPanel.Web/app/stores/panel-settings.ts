@@ -1,8 +1,14 @@
+import type { FetchError } from 'ofetch'
+
 export const usePanelSettingsStore = defineStore('panel-settings', () => {
   const toast = useToast()
 
-  const publicSettings = ref<PanelPublicSettings>({} as PanelPublicSettings)
-  const settings = ref<PanelSettings>({} as PanelSettings)
+  const publicSettings = ref<PanelPublicSettings>({
+    name: '',
+    allowRegistration: false,
+    allowAccountSelfDeletion: false,
+  })
+  const settings = ref<PanelSettings | null>(null)
 
   async function fetchPublicSettings() {
     try {
@@ -11,8 +17,7 @@ export const usePanelSettingsStore = defineStore('panel-settings', () => {
       })
     } catch (err) {
       showError({
-        // @ts-ignore
-        status: err.status || 503,
+        status: (err as FetchError).status ?? 503,
         message: 'Failed to fetch panel settings',
         fatal: true,
       })

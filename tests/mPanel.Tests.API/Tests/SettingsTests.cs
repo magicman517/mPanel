@@ -22,7 +22,7 @@ public class SettingsTests(AspireFixture fixture) : TestBase(fixture)
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(settings);
     }
-    
+
     [Fact]
     public async Task GetSettings_Anonymous_ReturnsUnauthorized()
     {
@@ -35,7 +35,7 @@ public class SettingsTests(AspireFixture fixture) : TestBase(fixture)
         // Assert
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
-    
+
     [Fact]
     public async Task GetSettings_UserRole_ReturnsForbidden()
     {
@@ -56,10 +56,10 @@ public class SettingsTests(AspireFixture fixture) : TestBase(fixture)
         // Arrange
         var authContext = await CreateAuthenticatedClient(true);
         using var client = authContext.client;
-        
+
         // Act
         using var response = await client.GetAsync("/api/settings");
-        
+
         // Assert
         var settings = await response.Content.ReadFromJsonAsync<GetSettingsResponse>();
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);

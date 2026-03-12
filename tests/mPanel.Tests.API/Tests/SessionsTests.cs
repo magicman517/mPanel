@@ -12,10 +12,10 @@ public class SessionsTests(AspireFixture fixture) : TestBase(fixture)
     {
         // Arrange
         using var client = CreateAnonymousClient();
-        
+
         // Act
         using var response = await client.GetAsync("/api/sessions/current");
-        
+
         // Assert
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
@@ -26,10 +26,10 @@ public class SessionsTests(AspireFixture fixture) : TestBase(fixture)
         // Arrange
         var authContext = await CreateAuthenticatedClient();
         using var client = authContext.client;
-        
+
         // Act
         using var response = await client.GetAsync("/api/sessions/current");
-        
+
         // Assert
         var session = await response.Content.ReadFromJsonAsync<SessionDto>();
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);

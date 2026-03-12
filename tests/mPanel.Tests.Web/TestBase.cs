@@ -12,7 +12,7 @@ public abstract class TestBase(AspireFixture fixture) : PageTest
 {
     protected readonly DistributedApplication App = fixture.App;
     protected readonly Faker Faker = new();
-    
+
     private static readonly string ResultsDir = Path.Combine(Directory.GetCurrentDirectory(), "test-results");
     private const int Timeout = 30_000;
 
@@ -21,7 +21,7 @@ public abstract class TestBase(AspireFixture fixture) : PageTest
         var email = Faker.Internet.Email();
         var username = Faker.Internet.UserName();
         var password = Faker.Internet.Password(length: 8);
-        
+
         var path = asAdmin ? "/api/testing/create-admin-user" : "/api/users";
 
         await Page.APIRequest.PostAsync(path, new APIRequestContextOptions
@@ -33,7 +33,7 @@ public abstract class TestBase(AspireFixture fixture) : PageTest
                 password
             }
         });
-        
+
         await Page.APIRequest.PostAsync("/api/auth/sign-in", new APIRequestContextOptions
         {
             DataObject = new
@@ -42,10 +42,10 @@ public abstract class TestBase(AspireFixture fixture) : PageTest
                 password
             }
         });
-        
+
         return (email, username, password);
     }
-    
+
     public override async Task InitializeAsync()
     {
         await base.InitializeAsync();
@@ -56,7 +56,7 @@ public abstract class TestBase(AspireFixture fixture) : PageTest
             Snapshots = true,
             Sources = true
         });
-        
+
         Assertions.SetDefaultExpectTimeout(Timeout);
         Page.SetDefaultTimeout(Timeout);
         Page.SetDefaultNavigationTimeout(Timeout);

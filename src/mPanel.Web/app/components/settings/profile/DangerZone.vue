@@ -10,7 +10,10 @@ const panelSettingsStore = usePanelSettingsStore()
     class="bg-linear-to-tl from-error/10 from-5% to-default"
   >
     <template #footer>
-      <UButton label="Delete account" color="error" variant="outline" />
+      <!-- TODO: implement account deletion -->
+      <UTooltip text="Not yet implemented">
+        <UButton label="Delete account" color="error" variant="outline" disabled />
+      </UTooltip>
     </template>
   </UPageCard>
 </template>

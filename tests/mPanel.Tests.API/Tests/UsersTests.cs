@@ -18,14 +18,14 @@ public class UsersTests(AspireFixture fixture) : TestBase(fixture)
             Username = Faker.Internet.UserName(),
             Password = Faker.Internet.Password(length: 8)
         };
-        
+
         // Act
         using var response = await client.PostAsJsonAsync("/api/users", request);
-        
+
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
     }
-    
+
     [Fact]
     public async Task CreateUser_WithInvalidEmail_ReturnsBadRequest()
     {
@@ -37,14 +37,14 @@ public class UsersTests(AspireFixture fixture) : TestBase(fixture)
             Username = Faker.Internet.UserName(),
             Password = Faker.Internet.Password(length: 8)
         };
-        
+
         // Act
         using var response = await client.PostAsJsonAsync("/api/users", request);
-        
+
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
-    
+
     [Fact]
     public async Task CreateUser_WithShortPassword_ReturnsBadRequest()
     {
@@ -56,14 +56,14 @@ public class UsersTests(AspireFixture fixture) : TestBase(fixture)
             Username = Faker.Internet.UserName(),
             Password = Faker.Internet.Password(length: 5)
         };
-        
+
         // Act
         using var response = await client.PostAsJsonAsync("/api/users", request);
-        
+
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
-    
+
     [Fact]
     public async Task CreateUser_WithExistingEmail_ReturnsBadRequest()
     {
@@ -82,16 +82,16 @@ public class UsersTests(AspireFixture fixture) : TestBase(fixture)
             Username = Faker.Internet.UserName(),
             Password = Faker.Internet.Password(length: 8)
         };
-        
+
         // Act
         using var response1 = await client.PostAsJsonAsync("/api/users", request1);
         using var response2 = await client.PostAsJsonAsync("/api/users", request2);
-        
+
         // Assert
         Assert.Equal(HttpStatusCode.Created, response1.StatusCode);
         Assert.Equal(HttpStatusCode.BadRequest, response2.StatusCode);
     }
-    
+
     [Fact]
     public async Task CreateUser_WithExistingUsername_ReturnsBadRequest()
     {
@@ -110,39 +110,39 @@ public class UsersTests(AspireFixture fixture) : TestBase(fixture)
             Username = username,
             Password = Faker.Internet.Password(length: 8)
         };
-        
+
         // Act
         using var response1 = await client.PostAsJsonAsync("/api/users", request1);
         using var response2 = await client.PostAsJsonAsync("/api/users", request2);
-        
+
         // Assert
         Assert.Equal(HttpStatusCode.Created, response1.StatusCode);
         Assert.Equal(HttpStatusCode.BadRequest, response2.StatusCode);
     }
-    
+
     [Fact]
     public async Task CurrentUser_GetCurrentUserInfo_Anonymous_ReturnsUnauthorized()
     {
         // Arrange
         using var client = CreateAnonymousClient();
-        
+
         // Act
         using var response = await client.GetAsync("/api/users/@me");
-        
+
         // Assert
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
-    
+
     [Fact]
     public async Task CurrentUser_GetCurrentUserInfo_Authenticated_ReturnsUserInfo()
     {
         // Arrange
         var authContext = await CreateAuthenticatedClient();
         using var client = authContext.client;
-        
+
         // Act
         using var response = await client.GetAsync("/api/users/@me");
-        
+
         // Assert
         response.EnsureSuccessStatusCode();
         var userInfo = await response.Content.ReadFromJsonAsync<GetCurrentUserResponse>();
@@ -150,7 +150,7 @@ public class UsersTests(AspireFixture fixture) : TestBase(fixture)
         Assert.Equal(authContext.email, userInfo.Email);
         Assert.Equal(authContext.username, userInfo.Username);
     }
-    
+
     [Fact]
     public async Task CurrentUser_UpdateProfile_Authenticated_ReturnsOk()
     {
@@ -162,14 +162,14 @@ public class UsersTests(AspireFixture fixture) : TestBase(fixture)
             Email = Faker.Internet.Email(),
             Username = Faker.Internet.UserName()
         };
-        
+
         // Act
         using var response = await client.PutAsJsonAsync("/api/users/@me", request);
-        
+
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
-    
+
     [Fact]
     public async Task CurrentUser_UpdatePassword_Authenticated_ReturnsOk()
     {
@@ -183,10 +183,10 @@ public class UsersTests(AspireFixture fixture) : TestBase(fixture)
             NewPassword = newPassword,
             ConfirmNewPassword = newPassword
         };
-        
+
         // Act
         using var response = await client.PutAsJsonAsync("/api/users/@me/password", request);
-        
+
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
