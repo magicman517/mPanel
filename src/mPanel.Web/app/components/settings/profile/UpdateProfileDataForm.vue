@@ -33,11 +33,13 @@ async function onSubmit(payload: FormSubmitEvent<CurrentUserSchema>) {
     return
   }
 
+  const previousEmail = currentUserStore.user?.email
+
   const success = await currentUserStore.updateProfile(payload.data)
 
   if (!success) return
 
-  if (payload.data.email !== currentUserStore.user?.email) {
+  if (payload.data.email !== previousEmail) {
     newEmail.value = payload.data.email
     emailUpdateModalVisible.value = true
   }

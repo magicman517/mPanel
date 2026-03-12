@@ -1,3 +1,4 @@
+import type { FetchError } from 'ofetch'
 import type { CurrentUserSchema, UpdatePasswordSchema } from '~/utils/schemas/current-user'
 
 export const useCurrentUserStore = defineStore('currentUser', () => {
@@ -5,25 +6,24 @@ export const useCurrentUserStore = defineStore('currentUser', () => {
   const authStore = useAuthStore()
 
   const user = ref<CurrentUser | null>(null)
-  const _pending = ref(false)
+  const pending = ref(false)
 
   async function fetchCurrentUser(force: boolean = false) {
     try {
       if (!force && user.value) return
 
-      _pending.value = true
+      pending.value = true
       user.value = await $fetch<CurrentUser>('/api/users/@me', {
         method: 'GET',
       })
     } catch (err) {
       showError({
-        // @ts-ignore
-        status: err.status || 503,
+        status: (err as FetchError).status ?? 503,
         message: 'Failed to fetch user data',
         fatal: true,
       })
     } finally {
-      _pending.value = false
+      pending.value = false
     }
   }
 
@@ -78,5 +78,5 @@ export const useCurrentUserStore = defineStore('currentUser', () => {
     }
   }
 
-  return { user, _pending, fetchCurrentUser, updateProfile, updatePassword }
+  return { user, pending, fetchCurrentUser, updateProfile, updatePassword }
 })

@@ -43,7 +43,7 @@ const items = ref<TabsItem[]>([
 
     <div
       v-if="!panelSettingsStore.publicSettings.allowRegistration"
-      class="fixed bottom-4 left-1/2 transform -translate-x-1/2 pointer-events-none"
+      class="fixed bottom-4 left-1/2 -translate-x-1/2 pointer-events-none"
     >
       <span class="text-sm text-muted opacity-50"> Registration is disabled </span>
     </div>

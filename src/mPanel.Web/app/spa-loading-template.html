@@ -30,7 +30,7 @@
         document.documentElement.classList.add('dark')
       }
 
-      var saved = JSON.parse(localStorage.getItem('mpanel-theme') || '{}')
+      var saved = JSON.parse(localStorage.getItem('mPanel-theme') || '{}')
       var pair = PRIMARY[saved.primary] || PRIMARY.emerald
       document.documentElement.style.setProperty('--spa-accent', isDark ? pair[1] : pair[0])
     } catch (e) {}

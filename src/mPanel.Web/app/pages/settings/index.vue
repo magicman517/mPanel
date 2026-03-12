@@ -3,7 +3,7 @@ const currentUserStore = useCurrentUserStore()
 </script>
 
 <template>
-  <template v-if="currentUserStore.user">
+  <template v-if="!currentUserStore.pending && currentUserStore.user">
     <SettingsProfileUpdateProfileDataForm />
     <SettingsProfileDangerZone />
   </template>
