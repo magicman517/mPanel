@@ -2,9 +2,9 @@
 @import '@nuxt/ui';
 
 @theme {
-  --font-sans: 'Inter', sans-serif;
+    --font-sans: 'Inter', sans-serif;
 }
 
 :root {
-  --ui-radius: 0.5rem;
+    --ui-radius: 0.5rem;
 }

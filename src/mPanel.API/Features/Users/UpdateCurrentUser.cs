@@ -1,9 +1,10 @@
-using System.Security.Claims;
 using FastEndpoints;
 using FluentValidation;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Identity;
+using mPanel.API.Core.Constants;
 using mPanel.API.Core.Entities;
+using mPanel.API.Extensions;
 using mPanel.API.Infrastructure.Jobs.Commands;
 
 namespace mPanel.API.Features.Users;
@@ -40,6 +41,7 @@ internal sealed class UpdateCurrentUserEndpoint(
     public override void Configure()
     {
         Put("/users/@me");
+        AuthSchemes(AppAuthSchemes.Cookie);
         Options(x => x.RequireRateLimiting("ProfileUpdate"));
         Description(d =>
         {
@@ -50,14 +52,13 @@ internal sealed class UpdateCurrentUserEndpoint(
 
     public override async Task HandleAsync(UpdateCurrentUserRequest req, CancellationToken ct)
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (userId is null)
+        if (User.GetUserId() is not { } userId)
         {
             await Send.UnauthorizedAsync(ct);
             return;
         }
 
-        var user = await userManager.FindByIdAsync(userId);
+        var user = await userManager.FindByIdAsync(userId.ToString());
         if (user is null)
         {
             await Send.UnauthorizedAsync(ct);

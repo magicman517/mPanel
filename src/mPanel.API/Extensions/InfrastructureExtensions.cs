@@ -74,8 +74,10 @@ public static class InfrastructureExtensions
             });
 
             builder.Services.AddSingleton<RedisTicketStore>();
+
             builder.Services.AddSingleton<IEmailService, EmailService>();
             builder.Services.AddSingleton<IEmailTemplateRenderer, EmailTemplateRenderer>();
+            builder.Services.AddSingleton<IApiKeyService, ApiKeyService>();
 
             return builder;
         }

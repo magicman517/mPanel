@@ -1,11 +1,11 @@
 export default defineAppConfig({
-  ui: {
-    colors: {
-      primary: 'emerald',
-      neutral: 'zinc',
+    ui: {
+        colors: {
+            primary: 'emerald',
+            neutral: 'zinc',
+        },
+        icons: {
+            loading: 'i-lucide-loader',
+        },
     },
-    icons: {
-      loading: 'i-lucide-loader',
-    },
-  },
 })

@@ -1,85 +1,92 @@
+<head>
+    <title>Loading</title>
+</head>
+
 <script>
-  ;(function () {
-    var PRIMARY = {
-      red: ['#ef4444', '#f87171'],
-      orange: ['#f97316', '#fb923c'],
-      amber: ['#f59e0b', '#fbbf24'],
-      yellow: ['#eab308', '#facc15'],
-      lime: ['#84cc16', '#a3e635'],
-      green: ['#22c55e', '#4ade80'],
-      emerald: ['#10b981', '#34d399'],
-      teal: ['#14b8a6', '#2dd4bf'],
-      cyan: ['#06b6d4', '#22d3ee'],
-      sky: ['#0ea5e9', '#38bdf8'],
-      blue: ['#3b82f6', '#60a5fa'],
-      indigo: ['#6366f1', '#818cf8'],
-      violet: ['#8b5cf6', '#a78bfa'],
-      purple: ['#a855f7', '#c084fc'],
-      fuchsia: ['#d946ef', '#e879f9'],
-      pink: ['#ec4899', '#f472b6'],
-      rose: ['#f43f5e', '#fb7185'],
-    }
+    ;(function () {
+        var PRIMARY = {
+            red: ['#ef4444', '#f87171'],
+            orange: ['#f97316', '#fb923c'],
+            amber: ['#f59e0b', '#fbbf24'],
+            yellow: ['#eab308', '#facc15'],
+            lime: ['#84cc16', '#a3e635'],
+            green: ['#22c55e', '#4ade80'],
+            emerald: ['#10b981', '#34d399'],
+            teal: ['#14b8a6', '#2dd4bf'],
+            cyan: ['#06b6d4', '#22d3ee'],
+            sky: ['#0ea5e9', '#38bdf8'],
+            blue: ['#3b82f6', '#60a5fa'],
+            indigo: ['#6366f1', '#818cf8'],
+            violet: ['#8b5cf6', '#a78bfa'],
+            purple: ['#a855f7', '#c084fc'],
+            fuchsia: ['#d946ef', '#e879f9'],
+            pink: ['#ec4899', '#f472b6'],
+            rose: ['#f43f5e', '#fb7185'],
+        }
 
-    try {
-      var isDark = false
-      var mode =
-        localStorage.getItem('nuxt-color-mode') ||
-        (document.cookie.match(/nuxt-color-mode=([^;]+)/) || [])[1]
-      if (mode === 'dark' || (!mode && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        isDark = true
-        document.documentElement.classList.add('dark')
-      }
+        try {
+            var isDark = false
+            var mode =
+                localStorage.getItem('nuxt-color-mode') ||
+                (document.cookie.match(/nuxt-color-mode=([^;]+)/) || [])[1]
+            if (
+                mode === 'dark' ||
+                (!mode && window.matchMedia('(prefers-color-scheme: dark)').matches)
+            ) {
+                isDark = true
+                document.documentElement.classList.add('dark')
+            }
 
-      var saved = JSON.parse(localStorage.getItem('mPanel-theme') || '{}')
-      var pair = PRIMARY[saved.primary] || PRIMARY.emerald
-      document.documentElement.style.setProperty('--spa-accent', isDark ? pair[1] : pair[0])
-    } catch (e) {}
-  })()
+            var saved = JSON.parse(localStorage.getItem('mPanel-theme') || '{}')
+            var pair = PRIMARY[saved.primary] || PRIMARY.emerald
+            document.documentElement.style.setProperty('--spa-accent', isDark ? pair[1] : pair[0])
+        } catch (e) {}
+    })()
 </script>
 <style>
-  #spa-loading {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: fixed;
-    inset: 0;
-    background-color: #ffffff;
-  }
-
-  .dark #spa-loading {
-    background-color: #18181b;
-  }
-
-  #spa-loading svg {
-    color: var(--spa-accent, #10b981);
-    animation: spa-spin 1s linear infinite;
-  }
-
-  @keyframes spa-spin {
-    to {
-      transform: rotate(360deg);
+    #spa-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        inset: 0;
+        background-color: #ffffff;
     }
-  }
+
+    .dark #spa-loading {
+        background-color: #18181b;
+    }
+
+    #spa-loading svg {
+        color: var(--spa-accent, #10b981);
+        animation: spa-spin 1s linear infinite;
+    }
+
+    @keyframes spa-spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
 </style>
 <div id="spa-loading">
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="32"
-    height="32"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    stroke-width="2"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-  >
-    <path d="M12 2v4" />
-    <path d="m16.2 7.8 2.9-2.9" />
-    <path d="M18 12h4" />
-    <path d="m16.2 16.2 2.9 2.9" />
-    <path d="M12 18v4" />
-    <path d="m4.9 19.1 2.9-2.9" />
-    <path d="M2 12h4" />
-    <path d="m4.9 4.9 2.9 2.9" />
-  </svg>
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="32"
+        height="32"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+    >
+        <path d="M12 2v4" />
+        <path d="m16.2 7.8 2.9-2.9" />
+        <path d="M18 12h4" />
+        <path d="m16.2 16.2 2.9 2.9" />
+        <path d="M12 18v4" />
+        <path d="m4.9 19.1 2.9-2.9" />
+        <path d="M2 12h4" />
+        <path d="m4.9 4.9 2.9 2.9" />
+    </svg>
 </div>

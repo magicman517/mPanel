@@ -1,7 +1,8 @@
-using System.Security.Claims;
 using FastEndpoints;
 using Microsoft.AspNetCore.Identity;
+using mPanel.API.Core.Constants;
 using mPanel.API.Core.Entities;
+using mPanel.API.Extensions;
 
 namespace mPanel.API.Features.Users;
 
@@ -26,6 +27,7 @@ internal sealed class GetCurrentUserEndpoint(UserManager<ApplicationUser> userMa
     public override void Configure()
     {
         Get("/users/@me");
+        AuthSchemes(AppAuthSchemes.Cookie, AppAuthSchemes.ApiKey);
         Description(d =>
         {
             d.WithTags("Users");
@@ -35,14 +37,13 @@ internal sealed class GetCurrentUserEndpoint(UserManager<ApplicationUser> userMa
 
     public override async Task HandleAsync(CancellationToken ct)
     {
-        var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (string.IsNullOrEmpty(id))
+        if (User.GetUserId() is not { } userId)
         {
             await Send.UnauthorizedAsync(ct);
             return;
         }
 
-        var user = await userManager.FindByIdAsync(id);
+        var user = await userManager.FindByIdAsync(userId.ToString());
         if (user is null)
         {
             await Send.UnauthorizedAsync(ct);
