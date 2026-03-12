@@ -8,20 +8,20 @@ public class HomePageTests(AspireFixture fixture) : TestBase(fixture)
     {
         // Act
         await Page.GotoAsync("/");
-        
+
         // Assert
         await Expect(Page).ToHaveURLAsync("/auth");
     }
-    
+
     [Fact]
     public async Task HomePage_AuthenticatedUser_DisplaysHomePage()
     {
         // Arrange
         await AuthenticateAsync();
-        
+
         // Act
         await Page.GotoAsync("/");
-        
+
         // Assert
         await Expect(Page).ToHaveURLAsync("/");
         await Expect(Page.Locator("h1")).ToHaveTextAsync("Home");
