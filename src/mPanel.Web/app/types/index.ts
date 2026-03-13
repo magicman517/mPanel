@@ -1,3 +1,17 @@
+export type HealthResponse = {
+    status: string
+    totalDurationMs: number
+    checks: HealthCheck[]
+}
+
+export type HealthCheck = {
+    name: string
+    status: string
+    description: string | null
+    durationMs: number
+    exception: string | null
+}
+
 export type PanelPublicSettings = {
     name: string
     allowRegistration: boolean

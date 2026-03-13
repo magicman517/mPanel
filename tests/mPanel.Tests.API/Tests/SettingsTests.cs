@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json.Serialization;
+using mPanel.API.Core.Entities;
 using mPanel.API.Features.PanelSettings;
 
 namespace mPanel.Tests.API.Tests;
@@ -64,5 +65,72 @@ public class SettingsTests(AspireFixture fixture) : TestBase(fixture)
         var settings = await response.Content.ReadFromJsonAsync<GetSettingsResponse>();
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(settings);
+    }
+
+    [Fact]
+    public async Task UpdateSettings_UserRole_ReturnsForbidden()
+    {
+        // Arrange
+        var authContext = await CreateAuthenticatedClient();
+        using var client = authContext.client;
+        var request = new UpdatePanelSettingsRequest
+        {
+            Name = Faker.Internet.UserName(),
+            Smtp = new Smtp()
+        };
+
+        // Act
+        using var response = await client.PutAsJsonAsync("/api/settings", request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task UpdateSettings_AdminRole_WithValidData_ReturnsNoContent()
+    {
+        // Arrange
+        var authContext = await CreateAuthenticatedClient(true);
+        using var client = authContext.client;
+        var request = new UpdatePanelSettingsRequest
+        {
+            Name = Faker.Internet.UserName(),
+            Url = new Uri("http://localhost:8080"),
+            AllowRegistration = true,
+            AllowAccountSelfDeletion = true,
+            Smtp = new Smtp
+            {
+                Host = "localhost",
+                Port = 587,
+                From = "no-reply@host.local",
+                Username = Faker.Internet.UserName(),
+                Password = Faker.Internet.Password()
+            }
+        };
+
+        // Act
+        using var response = await client.PutAsJsonAsync("/api/settings", request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task UpdateSettings_WithLongName_ReturnsBadRequest()
+    {
+        // Arrange
+        var authContext = await CreateAuthenticatedClient(true);
+        using var client = authContext.client;
+        var request = new UpdatePanelSettingsRequest
+        {
+            Name = new string('a', 33),
+            Smtp = new Smtp()
+        };
+
+        // Act
+        using var response = await client.PutAsJsonAsync("/api/settings", request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 }

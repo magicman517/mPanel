@@ -8,6 +8,11 @@ export default defineNuxtConfig({
     imports: {
         dirs: ['types/*.ts'],
     },
+    icon: {
+        serverBundle: {
+            collections: ['lucide'],
+        },
+    },
     vite: {
         server: {
             allowedHosts: ['host.docker.internal', 'aspire.dev.internal'],

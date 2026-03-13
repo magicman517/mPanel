@@ -27,6 +27,8 @@ const links: NavigationMenuItem[][] = [
                 open.value = false
             },
         },
+    ],
+    [
         {
             label: 'Settings',
             icon: 'i-lucide-settings',
@@ -59,9 +61,10 @@ const groups = computed(() => [
         id: 'links',
         label: 'Go to',
         items: [
-            ...links[0],
-            ...(authStore.isAdmin ? links[1] : []),
-            ...links[2],
+            ...links[0]!,
+            ...links[1]!,
+            ...(authStore.isAdmin ? links[2] : [])!,
+            ...links[3]!,
         ] as CommandPaletteItem[],
     },
 ])
@@ -101,8 +104,17 @@ const groups = computed(() => [
                 />
 
                 <UNavigationMenu
+                    v-if="authStore.isAdmin"
                     :collapsed="collapsed"
                     :items="links[2]"
+                    orientation="vertical"
+                    tooltip
+                    popover
+                />
+
+                <UNavigationMenu
+                    :collapsed="collapsed"
+                    :items="links[3]"
                     orientation="vertical"
                     tooltip
                     class="mt-auto"
