@@ -73,7 +73,7 @@ async function createKey() {
                     <template #hint>
                         <span class="text-muted">optional</span>
                     </template>
-                    <UInput v-model="newKeyName" class="w-full" placeholder="My API Key" />
+                    <UInput v-model="newKeyName!" class="w-full" placeholder="My API Key" />
                 </UFormField>
 
                 <UFormField label="Expiration date" name="expires_at" class="w-full">

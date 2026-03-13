@@ -30,7 +30,7 @@ useHead({
 })
 
 useSeoMeta({
-    title: 'mPanel',
+    title: panelSettingsStore.publicSettings.name,
 })
 </script>
 
