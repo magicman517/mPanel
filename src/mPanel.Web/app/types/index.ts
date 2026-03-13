@@ -50,3 +50,10 @@ export type CurrentUser = {
     twoFactorEnabled: boolean
     createdAt: string
 }
+
+export type ApiKey = {
+    id: string
+    prefix: string
+    name: string | null
+    expiresAt: string | null
+}

@@ -46,7 +46,7 @@ public class ApiKeysTests(AspireFixture fixture) : TestBase(fixture)
         var request = new CreateApiKeyRequest
         {
             Name = Faker.Name.FullName(),
-            ExpiresAt = DateTime.UtcNow.AddDays(30)
+            ExpiresAt = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(30))
         };
 
         // Act
@@ -65,7 +65,7 @@ public class ApiKeysTests(AspireFixture fixture) : TestBase(fixture)
         var request = new CreateApiKeyRequest
         {
             Name = Faker.Name.FullName(),
-            ExpiresAt = DateTime.UtcNow.AddDays(30)
+            ExpiresAt = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(30))
         };
 
         // Act
@@ -86,8 +86,8 @@ public class ApiKeysTests(AspireFixture fixture) : TestBase(fixture)
         using var client = authContext.client;
         var request = new CreateApiKeyRequest
         {
-            Name = new string('A', 129),
-            ExpiresAt = DateTime.UtcNow.AddDays(30)
+            Name = new string('A', 65),
+            ExpiresAt = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(30))
         };
 
         // Act
@@ -106,7 +106,7 @@ public class ApiKeysTests(AspireFixture fixture) : TestBase(fixture)
         var request = new CreateApiKeyRequest
         {
             Name = Faker.Name.FullName(),
-            ExpiresAt = DateTime.UtcNow.AddDays(-1)
+            ExpiresAt = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-1))
         };
 
         // Act
@@ -139,7 +139,7 @@ public class ApiKeysTests(AspireFixture fixture) : TestBase(fixture)
         var createRequest = new CreateApiKeyRequest
         {
             Name = Faker.Name.FullName(),
-            ExpiresAt = DateTime.UtcNow.AddDays(30)
+            ExpiresAt = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(30))
         };
         using var createResponse = await client.PostAsJsonAsync("/api/api-keys", createRequest);
         var createContent = await createResponse.Content.ReadFromJsonAsync<CreateApiKeyResponse>();

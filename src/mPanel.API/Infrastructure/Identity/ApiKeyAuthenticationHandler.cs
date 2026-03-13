@@ -32,7 +32,7 @@ internal sealed class ApiKeyAuthenticationHandler(
             return AuthenticateResult.Fail("Invalid API key");
 
         var apiKey = await db.ApiKeys
-            .Where(k => k.Prefix == prefix && (k.ExpiresAt == null || k.ExpiresAt > DateTime.UtcNow))
+            .Where(k => k.Prefix == prefix && (k.ExpiresAt == null || k.ExpiresAt > DateOnly.FromDateTime(DateTime.UtcNow)))
             .FirstOrDefaultAsync();
 
         if (apiKey is null || !apiKeyService.ValidateKey(rawKey, apiKey.Hash))

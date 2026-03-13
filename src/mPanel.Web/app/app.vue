@@ -14,7 +14,7 @@ try {
     })
 }
 
-const toaster = { expand: true, progress: false }
+const toaster = { expand: true, progress: true, duration: 3000 }
 const color = computed(() => (colorMode.value === 'dark' ? '#1b1718' : 'white'))
 
 useHead({

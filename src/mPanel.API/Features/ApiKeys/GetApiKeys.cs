@@ -12,7 +12,7 @@ internal sealed class GetApiKeysEndpoint(PanelDbContext dbContext) : EndpointWit
     public override void Configure()
     {
         Get("/api-keys");
-        AuthSchemes(AppAuthSchemes.Cookie);
+        AuthSchemes(AppAuthSchemes.Cookie, AppAuthSchemes.ApiKey);
         Description(d =>
         {
             d.WithTags("API Keys");

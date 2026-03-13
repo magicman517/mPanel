@@ -11,9 +11,9 @@ public class ApiKey : BaseEntity
     public required string Prefix { get; set; }
     public required string Hash { get; set; }
 
-    public DateTime? ExpiresAt { get; set; }
+    public DateOnly? ExpiresAt { get; set; }
 
-    public bool IsActive => ExpiresAt == null || ExpiresAt > DateTime.UtcNow;
+    public bool IsActive => ExpiresAt == null || ExpiresAt > DateOnly.FromDateTime(DateTime.UtcNow);
 
     public ApplicationUser User { get; set; } = null!;
 }

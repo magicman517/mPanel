@@ -15,7 +15,7 @@ namespace mPanel.API.Features.ApiKeys;
 internal sealed record CreateApiKeyRequest
 {
     public string? Name { get; init; }
-    public DateTime? ExpiresAt { get; init; }
+    public DateOnly? ExpiresAt { get; init; }
 }
 
 internal sealed class CreateApiKeyRequestValidator : Validator<CreateApiKeyRequest>
@@ -23,10 +23,10 @@ internal sealed class CreateApiKeyRequestValidator : Validator<CreateApiKeyReque
     public CreateApiKeyRequestValidator()
     {
         RuleFor(x => x.Name)
-            .MaximumLength(128).WithMessage("Name cannot exceed 128 characters")
+            .MaximumLength(64).WithMessage("Name cannot exceed 64 characters")
             .When(x => x.Name is not null);
         RuleFor(x => x.ExpiresAt)
-            .GreaterThan(DateTime.UtcNow).WithMessage("Expiration date must be in the future")
+            .GreaterThan(DateOnly.FromDateTime(DateTime.UtcNow)).WithMessage("Expiration date must be in the future")
             .When(x => x.ExpiresAt is not null);
     }
 }

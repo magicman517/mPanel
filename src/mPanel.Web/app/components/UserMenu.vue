@@ -181,7 +181,7 @@ const items = computed<DropdownMenuItem[][]>(() => [
             v-bind="{
                 ...user,
                 label: collapsed ? undefined : user?.name,
-                trailingIcon: collapsed ? undefined : 'i-lucide-chevrons-up-down',
+                trailingIcon: collapsed ? undefined : 'i-lucide-ellipsis-vertical',
             }"
             class="data-[state=open]:bg-elevated cursor-pointer"
             color="neutral"

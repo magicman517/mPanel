@@ -13,8 +13,8 @@ using mPanel.API.Infrastructure.Persistence;
 namespace mPanel.API.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(PanelDbContext))]
-    [Migration("20260312130043_AddApiKeys")]
-    partial class AddApiKeys
+    [Migration("20260313102438_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -157,8 +157,8 @@ namespace mPanel.API.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime?>("ExpiresAt")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly?>("ExpiresAt")
+                        .HasColumnType("date");
 
                     b.Property<string>("Hash")
                         .IsRequired()
