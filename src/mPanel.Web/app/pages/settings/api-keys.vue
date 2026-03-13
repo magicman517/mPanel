@@ -5,7 +5,7 @@ import type { DateValue } from '@internationalized/date'
 const toast = useToast()
 
 const newKeyModalOpen = ref(false)
-const newKeyName = ref<string | null>(null)
+const newKeyName = ref<string | undefined>(undefined)
 const newKeyExpiresAt = ref<DateValue | null>(null)
 const createdKey = ref<string | null>(null)
 const keyVisible = ref(false)
@@ -17,7 +17,7 @@ const { data, error, refresh } = await useFetch<ApiKey[]>('/api/api-keys', {
 })
 
 function openCreateModal() {
-    newKeyName.value = null
+    newKeyName.value = undefined
     newKeyExpiresAt.value = null
     createdKey.value = null
     newKeyModalOpen.value = true
@@ -26,7 +26,7 @@ function openCreateModal() {
 function closeModal() {
     newKeyModalOpen.value = false
     keyVisible.value = false
-    newKeyName.value = null
+    newKeyName.value = undefined
     newKeyExpiresAt.value = null
     setTimeout(() => {
         createdKey.value = null
@@ -73,7 +73,7 @@ async function createKey() {
                     <template #hint>
                         <span class="text-muted">optional</span>
                     </template>
-                    <UInput v-model="newKeyName!" class="w-full" placeholder="My API Key" />
+                    <UInput v-model="newKeyName" class="w-full" placeholder="My API Key" />
                 </UFormField>
 
                 <UFormField label="Expiration date" name="expires_at" class="w-full">
