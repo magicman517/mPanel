@@ -37,7 +37,7 @@ internal sealed class DeleteApiKeyEndpoint(ILogger<DeleteApiKeyEndpoint> logger,
             return;
         }
 
-        var apiKey = await dbContext.ApiKeys.FirstOrDefaultAsync(k => k.Id == req.Id, ct);
+        var apiKey = await dbContext.ApiKeys.FirstOrDefaultAsync(k => k.Id == req.Id && k.UserId == userId, ct);
         if (apiKey is null)
         {
             ThrowError("API key not found", 404);
