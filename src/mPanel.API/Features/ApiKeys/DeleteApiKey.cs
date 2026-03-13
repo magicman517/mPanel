@@ -59,6 +59,6 @@ internal sealed class DeleteApiKeyEndpoint(ILogger<DeleteApiKeyEndpoint> logger,
 
         await Send.OkAsync(apiKeys, ct);
 
-        logger.LogInformation("Delted API key {ApiKeyId} for user {UserId}", apiKey.Id, userId);
+        logger.LogInformation("Deleted API key {ApiKeyId} for user {UserId}", apiKey.Id, userId);
     }
 }
