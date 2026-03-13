@@ -4,7 +4,6 @@ export const usePanelSettingsStore = defineStore('panel-settings', () => {
         allowRegistration: false,
         allowAccountSelfDeletion: false,
     })
-    const settings = ref<PanelSettings | null>(null)
 
     async function fetchPublicSettings() {
         publicSettings.value = await $fetch<PanelPublicSettings>('/api/settings/public', {
@@ -20,7 +19,6 @@ export const usePanelSettingsStore = defineStore('panel-settings', () => {
 
     return {
         publicSettings,
-        settings,
         fetchPublicSettings,
         fetchSettings,
     }

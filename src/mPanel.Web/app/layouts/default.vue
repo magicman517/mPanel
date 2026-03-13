@@ -58,7 +58,11 @@ const groups = computed(() => [
     {
         id: 'links',
         label: 'Go to',
-        items: links.flat() as CommandPaletteItem[],
+        items: [
+            ...links[0],
+            ...(authStore.isAdmin ? links[1] : []),
+            ...links[2],
+        ] as CommandPaletteItem[],
     },
 ])
 </script>
