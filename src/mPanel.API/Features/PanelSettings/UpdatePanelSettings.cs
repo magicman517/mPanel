@@ -2,6 +2,7 @@ using FastEndpoints;
 using FluentValidation;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
+using mPanel.API.Core.Constants;
 using mPanel.API.Core.Entities;
 using mPanel.API.Infrastructure.Persistence;
 
@@ -37,12 +38,13 @@ internal sealed class UpdatePanelSettingsRequestValidator : Validator<UpdatePane
     }
 }
 
-internal sealed class UpdatePanelSettingsEndpoint(ILogger<UpdatePanelSettingsEndpoint> logger, PanelDbContext dbContext)
+internal sealed class UpdatePanelSettingsEndpoint(PanelDbContext dbContext)
     : Endpoint<UpdatePanelSettingsRequest>
 {
     public override void Configure()
     {
         Put("/settings");
+        AuthSchemes(AppAuthSchemes.Cookie, AppAuthSchemes.ApiKey);
         Roles("Admin");
         Description(d =>
         {

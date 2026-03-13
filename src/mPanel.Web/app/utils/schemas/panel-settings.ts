@@ -15,8 +15,8 @@ export const updatePanelSettingsSchema = v.object({
         port: v.pipe(
             v.number(),
             v.integer(),
-            v.minValue(0, 'Port must be greater than 0'),
-            v.maxValue(65536, 'Port must be less than 65536'),
+            v.minValue(1, 'Port must be greater than 0'),
+            v.maxValue(65535, 'Port must be less than 65536'),
         ),
         username: v.optional(v.string()),
         password: v.optional(v.string()),

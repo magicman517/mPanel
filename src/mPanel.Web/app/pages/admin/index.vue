@@ -78,7 +78,7 @@ async function onSubmit(payload: FormSubmitEvent<UpdatePanelSettingsSchema>) {
     >
         <UPageCard
             title="Settings"
-            description="Manage you panel settings here"
+            description="Manage panel settings here"
             variant="naked"
             orientation="horizontal"
             class="mb-4"

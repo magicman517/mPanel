@@ -95,7 +95,6 @@ const groups = computed(() => [
                 />
 
                 <UNavigationMenu
-                    v-if="authStore.isAdmin"
                     :collapsed="collapsed"
                     :items="links[1]"
                     orientation="vertical"
