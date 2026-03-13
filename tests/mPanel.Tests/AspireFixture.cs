@@ -9,9 +9,9 @@ namespace mPanel.Tests;
 public class AspireFixture : IAsyncLifetime
 {
     public DistributedApplication App { get; private set; } = null!;
-    
+
     private readonly TimeSpan _defaultTimeout = TimeSpan.FromMinutes(1);
-    
+
     public async Task InitializeAsync()
     {
         var builder = await DistributedApplicationTestingBuilder

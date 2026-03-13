@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
+using mPanel.API.Core.Constants;
 using mPanel.API.Infrastructure.Identity;
 
 namespace mPanel.API.Extensions;
@@ -16,6 +18,7 @@ public static class AuthenticationExtensions
                     options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
                     options.DefaultSignInScheme = IdentityConstants.ApplicationScheme;
                 })
+                .AddScheme<AuthenticationSchemeOptions, ApiKeyAuthenticationHandler>(AppAuthSchemes.ApiKey, null)
                 .AddCookie(IdentityConstants.ApplicationScheme, options =>
                 {
                     options.Cookie.Name = "mPanel.Session";

@@ -10,6 +10,8 @@ public sealed class ApplicationUser : IdentityUser<Guid>
 
     public required string AvatarUrl { get; set; }
 
+    public ICollection<ApiKey> ApiKeys { get; set; } = new List<ApiKey>();
+
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public static string GenerateAvatarUrl(string email)

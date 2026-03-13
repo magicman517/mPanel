@@ -126,6 +126,22 @@ public static class ApiExtensions
                             ConnectionMultiplexerFactory = () => redis
                         });
                 });
+
+                options.AddPolicy("PasswordUpdate", context =>
+                {
+                    var redis = context.RequestServices.GetRequiredService<IConnectionMultiplexer>();
+
+                    // user id has to be in claims because auth is required for this endpoint
+                    var partitionKey = context.User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+                    return RedisRateLimitPartition.GetSlidingWindowRateLimiter(
+                        $"password_update:{partitionKey}",
+                        _ => new RedisSlidingWindowRateLimiterOptions
+                        {
+                            PermitLimit = 3,
+                            Window = TimeSpan.FromHours(1),
+                            ConnectionMultiplexerFactory = () => redis
+                        });
+                });
             });
 
             return builder;

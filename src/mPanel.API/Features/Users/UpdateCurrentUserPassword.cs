@@ -1,9 +1,11 @@
-using System.Security.Claims;
 using FastEndpoints;
 using FluentValidation;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Identity;
+using mPanel.API.Core.Constants;
 using mPanel.API.Core.Entities;
+using mPanel.API.Extensions;
+using mPanel.API.Infrastructure.Jobs.Commands;
 
 namespace mPanel.API.Features.Users;
 
@@ -42,6 +44,8 @@ internal sealed class UpdateCurrentUserPasswordEndpoint(
     public override void Configure()
     {
         Put("/users/@me/password");
+        AuthSchemes(AppAuthSchemes.Cookie);
+        Options(x => x.RequireRateLimiting("PasswordUpdate"));
         Description(d =>
         {
             d.WithTags("Users");
@@ -51,14 +55,13 @@ internal sealed class UpdateCurrentUserPasswordEndpoint(
 
     public override async Task HandleAsync(UpdateCurrentUserPasswordRequest req, CancellationToken ct)
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (userId is null)
+        if (User.GetUserId() is not { } userId)
         {
             await Send.UnauthorizedAsync(ct);
             return;
         }
 
-        var user = await userManager.FindByIdAsync(userId);
+        var user = await userManager.FindByIdAsync(userId.ToString());
         if (user is null)
         {
             await Send.UnauthorizedAsync(ct);
@@ -77,6 +80,12 @@ internal sealed class UpdateCurrentUserPasswordEndpoint(
         }
 
         await signInManager.RefreshSignInAsync(user);
+
+        if (user.Email is not null)
+        {
+            await new SendPasswordChangedJob { Recipient = user.Email }.QueueJobAsync(ct: ct);
+        }
+
         await Send.OkAsync(cancellation: ct);
 
         logger.LogInformation("Password updated for user {UserId}", user.Id);

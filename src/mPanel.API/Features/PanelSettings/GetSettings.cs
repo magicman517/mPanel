@@ -22,6 +22,7 @@ internal sealed class GetSettingsEndpoint(PanelDbContext dbContext) : EndpointWi
     public override void Configure()
     {
         Get("/settings");
+        AuthSchemes(AppAuthSchemes.Cookie, AppAuthSchemes.ApiKey);
         Roles("Admin");
         Description(d =>
         {

@@ -15,6 +15,7 @@ public sealed class PanelDbContext(DbContextOptions<PanelDbContext> options, Enc
     public DbSet<JobRecord> JobRecords { get; set; }
 
     public DbSet<PanelSettings> PanelSettings { get; set; }
+    public DbSet<ApiKey> ApiKeys { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

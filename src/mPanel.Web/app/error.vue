@@ -1,13 +1,19 @@
 <script setup lang="ts">
-const props = defineProps<{
-  error: NuxtError
+import type { NuxtError } from '#app'
+
+useSeoMeta({
+    title: 'Error',
+})
+
+defineProps<{
+    error: NuxtError
 }>()
 
 const handleError = () => clearError({ redirect: '/' })
 </script>
 
 <template>
-  <UApp>
-    <UError :error="error" @clear="handleError" />
-  </UApp>
+    <UApp>
+        <UError :error="error" @clear="handleError" />
+    </UApp>
 </template>

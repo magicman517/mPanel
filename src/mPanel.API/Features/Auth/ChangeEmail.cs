@@ -1,6 +1,7 @@
 using FastEndpoints;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Identity;
+using mPanel.API.Core.Constants;
 using mPanel.API.Core.Entities;
 
 namespace mPanel.API.Features.Auth;
@@ -25,6 +26,7 @@ internal sealed class ChangeEmailEndpoint(
     public override void Configure()
     {
         Get("/auth/change-email");
+        AuthSchemes(AppAuthSchemes.Cookie);
         Description(d =>
         {
             d.WithTags("Users");
