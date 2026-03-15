@@ -1,6 +1,5 @@
 using System.Net;
 using System.Net.Http.Json;
-using System.Text.Json.Serialization;
 using mPanel.API.Core.Entities;
 using mPanel.API.Features.PanelSettings;
 
@@ -124,6 +123,26 @@ public class SettingsTests(AspireFixture fixture) : TestBase(fixture)
         var request = new UpdatePanelSettingsRequest
         {
             Name = new string('a', 33),
+            Smtp = new Smtp()
+        };
+
+        // Act
+        using var response = await client.PutAsJsonAsync("/api/settings", request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task UpdateSettings_WithInvalidUrlScheme_ReturnsBadRequest()
+    {
+        // Arrange
+        var authContext = await CreateAuthenticatedClient(true);
+        using var client = authContext.client;
+        var request = new UpdatePanelSettingsRequest
+        {
+            Name = Faker.Internet.UserName(),
+            Url = new Uri("ftp://localhost:8080"),
             Smtp = new Smtp()
         };
 

@@ -34,7 +34,7 @@ func NewClient(baseURL, token string) *Client {
 
 func (c *Client) Handshake() error {
 	// TODO
-	return c.doRequest(context.Background(), http.MethodGet, "handshake", nil, nil)
+	return c.doRequest(context.Background(), http.MethodGet, "/api/nodes/handshake", nil, nil)
 }
 
 func (c *Client) doRequest(ctx context.Context, method, path string, reqBody any, resBody *any) error {
