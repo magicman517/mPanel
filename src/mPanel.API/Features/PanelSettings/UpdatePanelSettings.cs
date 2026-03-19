@@ -45,7 +45,7 @@ internal sealed class UpdatePanelSettingsEndpoint(PanelDbContext dbContext)
     {
         Put("/settings");
         AuthSchemes(AppAuthSchemes.Cookie, AppAuthSchemes.ApiKey);
-        Roles("Admin");
+        Roles(AppRoles.Admin);
         Description(d =>
         {
             d.WithTags("Settings");

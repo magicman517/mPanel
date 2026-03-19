@@ -23,7 +23,7 @@ internal sealed class GetSettingsEndpoint(PanelDbContext dbContext) : EndpointWi
     {
         Get("/settings");
         AuthSchemes(AppAuthSchemes.Cookie, AppAuthSchemes.ApiKey);
-        Roles("Admin");
+        Roles(AppRoles.Admin);
         Description(d =>
         {
             d.WithTags("Settings");

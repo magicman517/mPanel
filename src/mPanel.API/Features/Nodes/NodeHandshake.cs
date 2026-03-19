@@ -78,16 +78,16 @@ internal sealed class NodeHandshakeEndpoint(ILogger<NodeHandshakeEndpoint> logge
 [UsedImplicitly]
 internal sealed record NodeHandshakeRequest
 {
-    public Guid? NodeId { get; set; }
-    public required string OsName { get; set; }
-    public required string Architecture { get; set; }
-    public required int CpuCores { get; set; }
-    public required ulong TotalMemoryMb { get; set; }
-    public required ulong TotalDiskMb { get; set; }
+    public Guid? NodeId { get; init; }
+    public required string OsName { get; init; }
+    public required string Architecture { get; init; }
+    public required int CpuCores { get; init; }
+    public required ulong TotalMemoryMb { get; init; }
+    public required ulong TotalDiskMb { get; init; }
 }
 
 internal sealed record NodeHandshakeResponse
 {
-    public required Guid NodeId { get; set; }
-    public required string NodeName { get; set; }
+    public required Guid NodeId { get; init; }
+    public required string NodeName { get; init; }
 }

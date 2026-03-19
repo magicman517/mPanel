@@ -1,6 +1,7 @@
 using FastEndpoints;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Identity;
+using mPanel.API.Core.Constants;
 using mPanel.API.Core.Entities;
 
 namespace mPanel.API.Features.Testing;
@@ -36,7 +37,7 @@ internal sealed class CreateAdminUserEndpoint(UserManager<ApplicationUser> userM
         if (!result.Succeeded)
             throw new InvalidOperationException($"Failed to create admin user {req.Email}");
 
-        await userManager.AddToRolesAsync(user, ["User", "Admin"]);
+        await userManager.AddToRolesAsync(user, [AppRoles.User, AppRoles.Admin]);
         await Send.OkAsync(cancellation: ct);
     }
 }

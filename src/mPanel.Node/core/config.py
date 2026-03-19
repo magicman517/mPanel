@@ -23,9 +23,6 @@ class Config(BaseSettings):
 
 config = Config()  # type: ignore
 
-CONFIG_DIR = Path("/etc/mpanel")
-IDENTITY_FILE = CONFIG_DIR / ".node_id"
-
 
 def _get_identity_file() -> Path:
     return config.config_dir / ".node_id"

@@ -4,41 +4,34 @@ using FluentValidation;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using mPanel.API.Core.Constants;
-using mPanel.API.Core.Entities;
 using mPanel.API.Core.Enums;
-using mPanel.API.Core.Interfaces;
 using mPanel.API.Infrastructure.Persistence;
 
 namespace mPanel.API.Features.Nodes;
 
-internal sealed class CreateNodeEndpoint(
-    ILogger<CreateNodeEndpoint> logger,
-    INodeTokenService nodeTokenService,
-    PanelDbContext dbContext) : Endpoint<CreateNodeRequest, CreateNodeResponse>
+internal sealed class UpdateNodeEndpoint(PanelDbContext dbContext) : Endpoint<UpdateNodeRequest>
 {
-    private const string DockerImage = "ghcr.io/magicman517/mpanel-node:latest";
-
     public override void Configure()
     {
-        Post("/nodes");
+        Put("/nodes/{id:guid}");
         AuthSchemes(AppAuthSchemes.Cookie, AppAuthSchemes.ApiKey);
         Roles(AppRoles.Admin);
         Description(d =>
         {
             d.WithTags("Nodes");
-            d.Produces<CreateNodeResponse>(201);
+            d.Produces(204);
         });
     }
 
-    public override async Task HandleAsync(CreateNodeRequest req, CancellationToken ct)
+    public override async Task HandleAsync(UpdateNodeRequest req, CancellationToken ct)
     {
-        var settings = await dbContext.PanelSettings.FirstAsync(ct);
-        if (string.IsNullOrWhiteSpace(settings.Url))
+        var node = await dbContext.Nodes.FirstOrDefaultAsync(x => x.Id == req.Id, ct);
+        if (node is null)
         {
-            ThrowError("Panel URL is not configured. Please set the URL in panel settings before adding nodes");
+            ThrowError("Node not found", 404);
         }
 
-        var existingName = await dbContext.Nodes.FirstOrDefaultAsync(x => x.Name == req.Name, ct);
+        var existingName = await dbContext.Nodes.FirstOrDefaultAsync(x => x.Name == req.Name && x.Id != req.Id, ct);
         if (existingName is not null)
         {
             ThrowError($"Name {req.Name} is already taken", 409);
@@ -48,56 +41,28 @@ internal sealed class CreateNodeEndpoint(
             .Replace("http://", string.Empty, StringComparison.OrdinalIgnoreCase)
             .Replace("https://", string.Empty, StringComparison.OrdinalIgnoreCase)
             .TrimEnd('/');
-        var tokenResult = nodeTokenService.GenerateToken();
-        var node = new Node
-        {
-            Name = req.Name,
-            TokenPrefix = tokenResult.Prefix,
-            TokenHash = tokenResult.Hash,
-            Scheme = req.Scheme,
-            Address = address,
-            Port = req.Port,
-            Alias = req.Alias,
-            SftpPort = req.SftpPort,
-            SftpAlias = req.SftpAlias,
-            MaxMemoryMb = req.MaxMemoryMb == 0 ? null : req.MaxMemoryMb,
-            MaxDiskMb = req.MaxDiskMb == 0 ? null : req.MaxDiskMb,
-            IsMaintenanceMode = req.IsMaintenanceMode,
-            IsActive = req.IsActive
-        };
-        dbContext.Nodes.Add(node);
+
+        node.Name = req.Name;
+        node.Scheme = req.Scheme;
+        node.Address = address;
+        node.Port = req.Port;
+        node.Alias = req.Alias;
+        node.SftpPort = req.SftpPort;
+        node.SftpAlias = req.SftpAlias;
+        node.MaxMemoryMb = req.MaxMemoryMb;
+        node.MaxDiskMb = req.MaxDiskMb;
+        node.IsMaintenanceMode = req.IsMaintenanceMode;
+        node.IsActive = req.IsActive;
+
         await dbContext.SaveChangesAsync(ct);
-
-        await Send.CreatedAtAsync<GetNodeEndpoint>(
-            routeValues: new { id = node.Id },
-            responseBody: new CreateNodeResponse
-            {
-                Id = node.Id,
-                Token = tokenResult.Token,
-                DeployCommand = BuildCommand(settings.Url, tokenResult.Token, node)
-            },
-            cancellation: ct);
-
-        logger.LogInformation("Created new node with ID {NodeId} and Name {NodeName}", node.Id, node.Name);
-    }
-
-    private static string BuildCommand(string panelUrl, string token, Node node)
-    {
-        return $"docker run -d --name mpanel-node " +
-               $"--restart unless-stopped " +
-               $"-p {node.Port}:10001 -p {node.SftpPort}:2022 " +
-               "-v /var/run/docker.sock:/var/run/docker.sock " +
-               "-v /var/lib/mpanel/volumes:/var/lib/mpanel/volumes " +
-               "-v /etc/mpanel:/etc/mpanel " +
-               $"-e 'PANEL_URL={panelUrl.TrimEnd('/')}' " +
-               $"-e 'NODE_TOKEN={token}' " +
-               DockerImage;
+        await Send.NoContentAsync(ct);
     }
 }
 
 [UsedImplicitly]
-internal sealed record CreateNodeRequest
+internal sealed record UpdateNodeRequest
 {
+    [RouteParam] public required Guid Id { get; init; }
     public required string Name { get; init; }
     public required NodeConnectionScheme Scheme { get; init; }
     public required string Address { get; init; }
@@ -105,24 +70,15 @@ internal sealed record CreateNodeRequest
     public string? Alias { get; init; }
     public int SftpPort { get; init; } = 2022;
     public string? SftpAlias { get; init; }
-
     public ulong? MaxMemoryMb { get; init; }
     public ulong? MaxDiskMb { get; init; }
-
     public bool IsMaintenanceMode { get; init; }
     public bool IsActive { get; init; } = true;
 }
 
-internal sealed record CreateNodeResponse
+internal sealed class UpdateNodeRequestValidator : Validator<UpdateNodeRequest>
 {
-    public required Guid Id { get; init; }
-    public required string Token { get; init; }
-    public required string DeployCommand { get; init; }
-}
-
-internal sealed class CreateNodeRequestValidator : Validator<CreateNodeRequest>
-{
-    public CreateNodeRequestValidator()
+    public UpdateNodeRequestValidator()
     {
         RuleFor(x => x.Name)
             .NotEmpty().WithMessage("Name is required")

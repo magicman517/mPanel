@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using mPanel.API.Core.Entities;
+using mPanel.API.Core.Enums;
 
 namespace mPanel.API.Features.Nodes.Shared;
 
@@ -10,6 +11,7 @@ internal sealed record NodeDto
 
     public required string TokenPrefix { get; init; }
 
+    public required NodeConnectionScheme Scheme { get; init; }
     public required string Address { get; init; }
     public required int Port { get; init; }
     public string? Alias { get; init; }
@@ -45,6 +47,7 @@ internal sealed record NodeDto
             Id = entity.Id,
             Name = entity.Name,
             TokenPrefix = entity.TokenPrefix,
+            Scheme = entity.Scheme,
             Address = entity.Address,
             Port = entity.Port,
             Alias = entity.Alias,

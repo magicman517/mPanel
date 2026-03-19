@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using mPanel.API.Core.Constants;
 using mPanel.API.Core.Entities;
 using mPanel.API.Infrastructure.Identity;
 using mPanel.API.Infrastructure.Persistence;
@@ -14,7 +15,7 @@ public static class DatabaseExtensions
         public async Task MigrateDatabaseAsync()
         {
             const long lockId = 192837465;
-            string[] roles = ["Admin", "User"];
+            string[] roles = [AppRoles.Admin, AppRoles.User];
 
             await using var scope = app.Services.CreateAsyncScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<PanelDbContext>();

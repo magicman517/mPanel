@@ -14,7 +14,7 @@ internal sealed class GetNodesEndpoint(PanelDbContext dbContext) : Endpoint<GetN
     public override void Configure()
     {
         Get("/nodes");
-        Roles("Admin");
+        Roles(AppRoles.Admin);
         AuthSchemes(AppAuthSchemes.Cookie, AppAuthSchemes.ApiKey);
         Description(d =>
         {

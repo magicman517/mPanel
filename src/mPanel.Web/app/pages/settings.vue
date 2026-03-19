@@ -14,8 +14,7 @@ const links: NavigationMenuItem[][] = [
             async onSelect(e) {
                 e.preventDefault()
                 try {
-                    await authStore.signOut()
-                    await navigateTo('/auth', { external: true })
+                    await authStore.signOutAndNavigate()
                 } catch (err) {
                     toast.add({
                         id: 'sign-out-error',

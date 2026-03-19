@@ -30,13 +30,7 @@ internal sealed class GetApiKeysEndpoint(PanelDbContext dbContext) : EndpointWit
 
         var apiKeys = await dbContext.ApiKeys
             .Where(k => k.UserId == userId)
-            .Select(k => new ApiKeyDto
-            {
-                Id = k.Id,
-                Name = k.Name,
-                Prefix = k.Prefix,
-                ExpiresAt = k.ExpiresAt
-            })
+            .Select(ApiKeyDto.FromEntity)
             .ToListAsync(ct);
 
         await Send.OkAsync(apiKeys, ct);

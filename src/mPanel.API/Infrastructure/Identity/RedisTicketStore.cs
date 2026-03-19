@@ -7,8 +7,8 @@ namespace mPanel.API.Infrastructure.Identity;
 
 public class RedisTicketStore(IDatabase db) : ITicketStore
 {
-    private const string SessionsKeyPrefix = "sessions:";
-    private const string SessionKeyPrefix = "session:";
+    private const string UserSessionsKeyPrefix = "sessions:";
+    private const string SessionDataKeyPrefix = "session:";
 
     private readonly TicketSerializer _serializer = TicketSerializer.Default;
 
@@ -18,7 +18,7 @@ public class RedisTicketStore(IDatabase db) : ITicketStore
         var userId = ticket.Principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "unknown";
 
         await RenewAsync(sessionId, ticket);
-        await db.SetAddAsync(SessionsKeyPrefix + userId, sessionId);
+        await db.SetAddAsync(UserSessionsKeyPrefix + userId, sessionId);
         await ExtendUserIndexExpiryAsync(userId, ticket);
 
         return sessionId;
@@ -32,18 +32,18 @@ public class RedisTicketStore(IDatabase db) : ITicketStore
 
         if (expiry <= TimeSpan.Zero)
         {
-            await db.KeyDeleteAsync(SessionKeyPrefix + key);
+            await db.KeyDeleteAsync(SessionDataKeyPrefix + key);
             await RemoveFromUserIndexAsync(key);
             return;
         }
 
         var bytes = _serializer.Serialize(ticket);
-        await db.StringSetAsync(SessionKeyPrefix + key, bytes, expiry);
+        await db.StringSetAsync(SessionDataKeyPrefix + key, bytes, expiry);
     }
 
     public async Task<AuthenticationTicket?> RetrieveAsync(string key)
     {
-        var bytes = await db.StringGetAsync(SessionKeyPrefix + key);
+        var bytes = await db.StringGetAsync(SessionDataKeyPrefix + key);
         return bytes.IsNullOrEmpty
             ? null
             : _serializer.Deserialize(bytes!);
@@ -52,12 +52,12 @@ public class RedisTicketStore(IDatabase db) : ITicketStore
     public async Task RemoveAsync(string key)
     {
         await RemoveFromUserIndexAsync(key);
-        await db.KeyDeleteAsync(SessionKeyPrefix + key);
+        await db.KeyDeleteAsync(SessionDataKeyPrefix + key);
     }
 
     private async Task RemoveFromUserIndexAsync(string key)
     {
-        var bytes = await db.StringGetAsync(SessionKeyPrefix + key);
+        var bytes = await db.StringGetAsync(SessionDataKeyPrefix + key);
         if (bytes.IsNullOrEmpty) return;
 
         var ticket = _serializer.Deserialize(bytes!);
@@ -65,7 +65,7 @@ public class RedisTicketStore(IDatabase db) : ITicketStore
 
         if (userId is not null)
         {
-            await db.SetRemoveAsync(SessionsKeyPrefix + userId, key);
+            await db.SetRemoveAsync(UserSessionsKeyPrefix + userId, key);
         }
     }
 
@@ -77,7 +77,7 @@ public class RedisTicketStore(IDatabase db) : ITicketStore
 
         if (expiry <= TimeSpan.Zero) return;
 
-        var setKey = SessionsKeyPrefix + userId;
+        var setKey = UserSessionsKeyPrefix + userId;
         var currentTtl = await db.KeyTimeToLiveAsync(setKey);
 
         if (currentTtl is null || currentTtl < expiry)

@@ -1,8 +1,12 @@
 <script setup lang="ts">
+import type { FormSubmitEvent } from '@nuxt/ui'
 import type { Node } from '~/types'
+import { updateNodeSchema, type UpdateNodeSchema } from '~/utils/schemas/nodes'
 
 const route = useRoute()
 const id = route.params.id
+
+const toast = useToast()
 
 const { data, error, refresh } = await useFetch<Node>(`/api/nodes/${id}`)
 
@@ -21,6 +25,28 @@ const formState = reactive({
     isMaintenanceMode: data.value?.isMaintenanceMode ?? false,
     isActive: data.value?.isActive ?? true,
 })
+
+async function onSubmit(payload: FormSubmitEvent<UpdateNodeSchema>) {
+    try {
+        await $fetch(`/api/nodes/${id}`, {
+            method: 'PUT',
+            body: payload.data,
+        })
+        toast.add({
+            id: 'update-node-success',
+            title: 'Success',
+            description: 'Node settings have been updated',
+            color: 'success',
+        })
+    } catch (err) {
+        toast.add({
+            id: 'update-node-error',
+            title: 'Error',
+            description: getProblemDetailsMessage(err),
+            color: 'error',
+        })
+    }
+}
 </script>
 
 <template>
@@ -52,10 +78,16 @@ const formState = reactive({
         ]"
     />
 
-    <UForm v-else id="node-settings">
+    <UForm
+        v-else
+        id="node-settings"
+        :schema="updateNodeSchema"
+        :state="formState"
+        @submit="onSubmit"
+    >
         <UPageCard title="Node Settings" variant="naked" orientation="horizontal" class="mb-4">
             <UButton
-                form="admin-settings"
+                form="node-settings"
                 label="Save"
                 icon="i-lucide-cloud-check"
                 color="neutral"

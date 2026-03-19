@@ -13,7 +13,7 @@ internal sealed class GetNodeEndpoint(PanelDbContext dbContext) : Endpoint<GetNo
     {
         Get("/nodes/{id:guid}");
         AuthSchemes(AppAuthSchemes.Cookie, AppAuthSchemes.ApiKey);
-        Roles("Admin");
+        Roles(AppRoles.Admin);
         Description(d =>
         {
             d.WithTags("Nodes");

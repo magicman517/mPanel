@@ -53,7 +53,7 @@ internal sealed class NodeHeartbeatEndpoint(ILogger<NodeHeartbeatEndpoint> logge
 [UsedImplicitly]
 internal sealed record NodeHeartbeatRequest
 {
-    public required double CpuUsage { get; set; }
-    public required ulong MemoryUsageMb { get; set; }
-    public required ulong DiskUsageMb { get; set; }
+    public required double CpuUsage { get; init; }
+    public required ulong MemoryUsageMb { get; init; }
+    public required ulong DiskUsageMb { get; init; }
 }

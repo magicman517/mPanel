@@ -51,14 +51,14 @@ async def lifespan(app: FastAPI):
         await perform_handshake(panel_api, specs)
 
         app.state.panel_api = panel_api
-        app.state.hearbeat_task = asyncio.create_task(
+        app.state.heartbeat_task = asyncio.create_task(
             start_heartbeat_worker(panel_api, interval_seconds=10)
         )
 
         yield
 
-    if hasattr(app.state, "hearbeat_task"):
-        app.state.hearbeat_task.cancel()
+    if hasattr(app.state, "heartbeat_task"):
+        app.state.heartbeat_task.cancel()
 
 
 app = FastAPI(lifespan=lifespan)
