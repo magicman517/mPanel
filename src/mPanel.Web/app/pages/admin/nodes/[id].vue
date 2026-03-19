@@ -1,132 +1,121 @@
 <script setup lang="ts">
-import { useClipboard } from '@vueuse/core'
-import type { FormSubmitEvent } from '@nuxt/ui'
-import { createNodeSchema, type CreateNodeSchema } from '~/utils/schemas/nodes'
+import type { Node } from '~/types'
 
-const toast = useToast()
-const { copy, copied } = useClipboard()
+const route = useRoute()
+const id = route.params.id
+
+const { data, error, refresh } = await useFetch<Node>(`/api/nodes/${id}`)
 
 const schemes = ['Http', 'Https']
 const formState = reactive({
-    name: '',
-    scheme: 'Http',
-    address: '',
-    port: 10001,
-    alias: '',
-    sftpPort: 2022,
-    sftpAlias: '',
-    maxMemoryMb: 0,
-    maxDiskMb: 0,
-    isMaintenanceMode: false,
-    isActive: true,
+    id: data.value?.id,
+    name: data.value?.name,
+    scheme: data.value?.scheme ?? 'Http',
+    address: data.value?.address,
+    port: data.value?.port ?? 10001,
+    alias: data.value?.alias ?? '',
+    sftpPort: data.value?.sftpPort ?? 2022,
+    sftpAlias: data.value?.sftpAlias ?? '',
+    maxMemoryMb: data.value?.maxMemoryMb ?? 0,
+    maxDiskMb: data.value?.maxDiskMb ?? 0,
+    isMaintenanceMode: data.value?.isMaintenanceMode ?? false,
+    isActive: data.value?.isActive ?? true,
 })
-
-const newNodeModalOpen = ref(false)
-const newNode = ref({
-    id: '',
-    token: '',
-    deployCommand: '',
-})
-
-async function onSubmit(payload: FormSubmitEvent<CreateNodeSchema>) {
-    try {
-        const res = await $fetch<{ id: string; token: string; deployCommand: string }>(
-            '/api/nodes',
-            {
-                method: 'POST',
-                body: payload.data,
-            },
-        )
-        newNode.value = res
-        newNodeModalOpen.value = true
-    } catch (err) {
-        toast.add({
-            id: 'create-node-error',
-            title: 'Error',
-            description: getProblemDetailsMessage(err),
-            color: 'error',
-        })
-    }
-}
 </script>
 
 <template>
-    <UModal v-model:open="newNodeModalOpen" title="Node created" :dismissible="false">
-        <template #body>
-            <UAlert
-                title="Use this command to run your node"
-                description="This command contains node token. You will see it only once!"
-                color="info"
-                variant="outline"
-                icon="i-lucide-circle-check"
-                class="mb-4"
-            />
+    <UEmpty
+        v-if="error || !data"
+        icon="i-lucide-circle-question-mark"
+        title="Node not found"
+        description="This node couldn’t be loaded. It may no longer exist, or something went wrong while fetching it"
+        variant="naked"
+        :actions="[
+            {
+                icon: 'i-lucide-server',
+                label: 'Nodes',
+                variant: 'subtle',
+                class: 'cursor-pointer',
+                async onClick() {
+                    await navigateTo('/admin/nodes')
+                },
+            },
+            {
+                icon: 'i-lucide-refresh-cw',
+                label: 'Refresh',
+                color: 'neutral',
+                variant: 'subtle',
+                async onClick() {
+                    await refresh()
+                },
+            },
+        ]"
+    />
 
-            <UInput
-                v-model="newNode.deployCommand"
-                class="w-full"
-                :ui="{ trailing: 'pr-0.5' }"
-                disabled
-            >
-                <template #trailing>
-                    <UButton
-                        @click="copy(newNode.deployCommand)"
-                        :color="copied ? 'success' : 'neutral'"
-                        :icon="copied ? 'i-lucide-copy-check' : 'i-lucide-copy'"
-                        variant="link"
-                        size="sm"
-                        aria-label="Copy to clipboard"
-                        class="cursor-pointer"
-                    />
-                </template>
-            </UInput>
-        </template>
-
-        <template #footer>
-            <div class="flex w-full justify-center">
-                <UButton label="Got it" icon="i-lucide-check" variant="subtle" to="/admin/nodes" />
-            </div>
-        </template>
-    </UModal>
-
-    <UForm id="create-node" :schema="createNodeSchema" :state="formState" @submit="onSubmit">
-        <UPageCard
-            title="Create Node"
-            description="Fill in the form below to create a new node"
-            variant="naked"
-            orientation="horizontal"
-            class="mb-4"
-        >
+    <UForm v-else id="node-settings">
+        <UPageCard title="Node Settings" variant="naked" orientation="horizontal" class="mb-4">
             <UButton
-                label="Add"
-                icon="i-lucide-plus"
+                form="admin-settings"
+                label="Save"
+                icon="i-lucide-cloud-check"
                 color="neutral"
-                class="w-fit lg:ms-auto cursor-pointer"
                 type="submit"
+                class="w-fit lg:ms-auto cursor-pointer"
+                loading-auto
             />
         </UPageCard>
 
+        <UPageCard
+            v-if="data.handshakeError"
+            title="Connection issue detected"
+            :description="data.handshakeError"
+            class="mb-4"
+            highlight
+            highlight-color="error"
+            spotlight
+            spotlight-color="error"
+        />
+
         <UPageCard title="General" variant="subtle" class="mb-4">
             <UFormField
-                name="name"
-                label="Name"
-                description="User-friendly name for the node"
-                class="flex max-sm:flex-col justify-between sm:items-center gap-4"
+                name="id"
+                label="Node ID"
+                description="The unique identifier for this node"
                 required
+                class="flex max-sm:flex-col justify-between sm:items-center gap-4"
+                loading-auto
+            >
+                <UInput
+                    v-model="formState.id"
+                    type="text"
+                    autocomplete="off"
+                    class="w-full"
+                    loading-auto
+                    readonly
+                />
+            </UFormField>
+
+            <USeparator />
+
+            <UFormField
+                name="name"
+                label="Node Name"
+                description="The name of this node"
+                required
+                class="flex max-sm:flex-col justify-between sm:items-center gap-4"
                 loading-auto
             >
                 <UInput
                     v-model="formState.name"
                     type="text"
                     autocomplete="off"
-                    placeholder="Frankfurt"
                     class="w-full"
                     loading-auto
                 />
             </UFormField>
+        </UPageCard>
 
-            <USeparator />
-
+        <UPageCard title="Connection" variant="subtle" class="mb-4">
             <UFormField
                 name="scheme"
                 label="Scheme"

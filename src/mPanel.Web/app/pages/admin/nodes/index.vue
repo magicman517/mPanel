@@ -120,10 +120,19 @@ function isNodeOnline(node: Node): boolean {
                                 <p class="text-sm text-muted fontfont-semibold">CPU Usage</p>
                             </div>
                             <p class="text-xs text-muted fontfont-semibold">
-                                {{ node.lastHeartbeatCpuUsage ?? 'unknown' }}
+                                {{
+                                    isNodeOnline(node)
+                                        ? `${node.lastHeartbeatCpuUsage ?? 'unknown'} / 100%`
+                                        : 'offline'
+                                }}
                             </p>
                         </div>
-                        <UProgress :model-value="node.lastHeartbeatCpuUsage ?? 0" :max="100" />
+                        <UProgress
+                            :model-value="
+                                isNodeOnline(node) ? (node.lastHeartbeatCpuUsage ?? 0) : 0
+                            "
+                            :max="100"
+                        />
                     </div>
 
                     <div class="flex flex-col gap-1 w-full">
@@ -133,18 +142,34 @@ function isNodeOnline(node: Node): boolean {
                                 <p class="text-sm text-muted fontfont-semibold">Memory Usage</p>
                             </div>
                             <p class="text-xs text-muted fontfont-semibold">
-                                {{ node.lastHeartbeatMemoryMb ?? 'unknown' }}
+                                {{
+                                    isNodeOnline(node)
+                                        ? `${node.lastHeartbeatMemoryMb ?? 'unknown'} / ${node.totalMemoryMb ?? 'unknown'} MB`
+                                        : 'offline'
+                                }}
                             </p>
                         </div>
-                        <UProgress :model-value="node.lastHeartbeatMemoryMb ?? 0" :max="100" />
+                        <UProgress
+                            :model-value="
+                                isNodeOnline(node) ? (node.lastHeartbeatMemoryMb ?? 0) : 0
+                            "
+                            :max="node.totalMemoryMb ?? 1"
+                        />
                     </div>
 
-                    <div class="flex w-full items-center justify-end">
+                    <div class="flex w-full items-center justify-between mt-1">
+                        <div
+                            v-if="node.handshakeError"
+                            class="flex items-center gap-1.5 text-error text-sm font-medium"
+                        >
+                            <UIcon name="i-lucide-alert-triangle" class="size-4" />
+                            <p>Connection issue detected. Click edit to view details</p>
+                        </div>
+                        <div v-else></div>
                         <UButton
                             label="Edit"
                             icon="i-lucide-edit"
                             variant="subtle"
-                            class="cursor-pointer"
                             size="sm"
                             :to="`/admin/nodes/${node.id}`"
                         />

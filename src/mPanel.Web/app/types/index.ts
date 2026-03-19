@@ -84,6 +84,7 @@ export type Node = {
     id: string
     name: string
     tokenPrefix: string
+    scheme: 'Http' | 'Https' | string
     address: string
     port: number
     alias: string | null

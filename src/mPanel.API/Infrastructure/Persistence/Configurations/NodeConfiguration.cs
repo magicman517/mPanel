@@ -10,5 +10,7 @@ public class NodeConfiguration : IEntityTypeConfiguration<Node>
     {
         builder.HasIndex(x => x.Name).IsUnique();
         builder.HasIndex(x => x.TokenPrefix).IsUnique();
+
+        builder.Property(x => x.Scheme).HasConversion<string>();
     }
 }

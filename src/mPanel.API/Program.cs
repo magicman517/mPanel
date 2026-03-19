@@ -1,6 +1,9 @@
+using System.Text.Json.Serialization;
 using FastEndpoints;
+using mPanel.API.Core.Interfaces;
 using mPanel.API.Extensions;
 using mPanel.API.Infrastructure.Jobs;
+using mPanel.API.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +17,11 @@ if (!builder.Environment.IsEnvironment("Testing"))
 builder.Services.AddFastEndpoints();
 builder.Services.AddResponseCaching();
 builder.Services.AddJobQueues<JobRecord, JobStorageProvider>();
+
+builder.Services.AddHttpClient<INodeApiService, NodeApiService>(client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(5);
+});
 
 var app = builder.Build();
 
@@ -31,6 +39,7 @@ app.UseFastEndpoints(config =>
 {
     config.Endpoints.RoutePrefix = "api";
     config.Binding.UsePropertyNamingPolicy = true;
+    config.Serializer.Options.Converters.Add(new JsonStringEnumConverter());
 
     config.Endpoints.Configurator = ep =>
     {

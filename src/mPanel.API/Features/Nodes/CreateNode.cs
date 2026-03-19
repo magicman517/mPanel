@@ -6,6 +6,7 @@ using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using mPanel.API.Core.Constants;
 using mPanel.API.Core.Entities;
+using mPanel.API.Core.Enums;
 using mPanel.API.Core.Interfaces;
 using mPanel.API.Infrastructure.Persistence;
 
@@ -44,13 +45,18 @@ internal sealed class CreateNodeEndpoint(
             ThrowError($"Name {req.Name} is already taken", 409);
         }
 
+        var address = req.Address
+            .Replace("http://", string.Empty, StringComparison.OrdinalIgnoreCase)
+            .Replace("https://", string.Empty, StringComparison.OrdinalIgnoreCase)
+            .TrimEnd('/');
         var tokenResult = nodeTokenService.GenerateToken();
         var node = new Node
         {
             Name = req.Name,
             TokenPrefix = tokenResult.Prefix,
             TokenHash = tokenResult.Hash,
-            Address = req.Address,
+            Scheme = req.Scheme,
+            Address = address,
             Port = req.Port,
             Alias = req.Alias,
             SftpPort = req.SftpPort,
@@ -84,8 +90,8 @@ internal sealed class CreateNodeEndpoint(
                "-v /var/run/docker.sock:/var/run/docker.sock " +
                "-v /var/lib/mpanel/volumes:/var/lib/mpanel/volumes " +
                "-v /etc/mpanel:/etc/mpanel " +
-               $"-e PANEL_URL='{panelUrl}' " +
-               $"-e NODE_TOKEN='{token}' " +
+               $"-e 'PANEL_URL={panelUrl.TrimEnd('/')}' " +
+               $"-e 'NODE_TOKEN={token}' " +
                DockerImage;
     }
 }
@@ -94,6 +100,9 @@ internal sealed class CreateNodeEndpoint(
 internal sealed record CreateNodeRequest
 {
     public required string Name { get; init; }
+
+    [DefaultValue(NodeConnectionScheme.Http)]
+    public required NodeConnectionScheme Scheme { get; init; }
 
     public required string Address { get; init; }
     [DefaultValue(10001)] public int Port { get; init; } = 10001;

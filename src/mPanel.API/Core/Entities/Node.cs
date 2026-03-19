@@ -1,4 +1,5 @@
 using mPanel.API.Core.Common;
+using mPanel.API.Core.Enums;
 
 namespace mPanel.API.Core.Entities;
 
@@ -9,6 +10,7 @@ public class Node : BaseEntity
     public required string TokenPrefix { get; set; }
     public required string TokenHash { get; set; }
 
+    public required NodeConnectionScheme Scheme { get; set; }
     public required string Address { get; set; }
     public required int Port { get; set; }
     public string? Alias { get; set; }
