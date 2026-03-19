@@ -8,14 +8,13 @@ internal sealed class NodeApiService(ILogger<NodeApiService> logger, HttpClient 
     public async Task<(bool IsSuccess, string? ErrorMessage)> CheckHealthAsync(Node node,
         CancellationToken ct = default)
     {
-        var scheme = node.Scheme.ToString().ToLower();
-        var url = $"{scheme}://{node.Address}:{node.Port}/health";
+        var uriBuilder = new UriBuilder(node.Scheme.ToString().ToLower(), node.Address, node.Port, "health");
 
         try
         {
             logger.LogInformation("Pinging node '{Name}'", node.Name);
 
-            var response = await httpClient.GetAsync(url, ct);
+            using var response = await httpClient.GetAsync(uriBuilder.Uri, ct);
             if (response.IsSuccessStatusCode)
             {
                 return (true, null);

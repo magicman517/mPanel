@@ -117,9 +117,9 @@ function isNodeOnline(node: Node): boolean {
                         <div class="flex w-full gap-1 items-center justify-between">
                             <div class="flex items-center gap-1">
                                 <UIcon name="i-lucide-cpu" />
-                                <p class="text-sm text-muted fontfont-semibold">CPU Usage</p>
+                                <p class="text-sm text-muted font-semibold">CPU Usage</p>
                             </div>
-                            <p class="text-xs text-muted fontfont-semibold">
+                            <p class="text-xs text-muted font-semibold">
                                 {{
                                     isNodeOnline(node)
                                         ? `${node.lastHeartbeatCpuUsage ?? 'unknown'} / 100%`
@@ -139,9 +139,9 @@ function isNodeOnline(node: Node): boolean {
                         <div class="flex w-full gap-1 items-center justify-between">
                             <div class="flex items-center gap-1">
                                 <UIcon name="i-lucide-memory-stick" />
-                                <p class="text-sm text-muted fontfont-semibold">Memory Usage</p>
+                                <p class="text-sm text-muted font-semibold">Memory Usage</p>
                             </div>
-                            <p class="text-xs text-muted fontfont-semibold">
+                            <p class="text-xs text-muted font-semibold">
                                 {{
                                     isNodeOnline(node)
                                         ? `${node.lastHeartbeatMemoryMb ?? 'unknown'} / ${node.totalMemoryMb ?? 'unknown'} MB`
