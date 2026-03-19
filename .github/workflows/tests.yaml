@@ -27,7 +27,7 @@ jobs:
         with:
           node-version: 25
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v5
         with:
           version: 10
 
@@ -63,7 +63,7 @@ jobs:
         with:
           node-version: 25
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v5
         with:
           version: 10
 
