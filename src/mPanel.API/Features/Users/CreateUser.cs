@@ -3,6 +3,7 @@ using FluentValidation;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using mPanel.API.Core.Constants;
 using mPanel.API.Core.Entities;
 using mPanel.API.Infrastructure.Jobs.Commands;
 using mPanel.API.Infrastructure.Persistence;
@@ -68,10 +69,10 @@ internal sealed class CreateUserEndpoint(ILogger<CreateUserEndpoint> logger, Use
     public override async Task HandleAsync(CreateUserRequest req, CancellationToken ct)
     {
         var isFirstUser = !await userManager.Users.AnyAsync(ct);
-        var rolesToAssign = new List<string> { "User" };
+        var rolesToAssign = new List<string> { AppRoles.User };
         if (isFirstUser)
         {
-            rolesToAssign.Add("Admin");
+            rolesToAssign.Add(AppRoles.Admin);
         }
 
         var user = new ApplicationUser

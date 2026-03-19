@@ -7,7 +7,7 @@ using mPanel.API.Core.Entities;
 namespace mPanel.API.Features.Auth;
 
 [UsedImplicitly]
-internal sealed class ChangeEmailRequest
+internal sealed record ChangeEmailRequest
 {
     [QueryParam] public Guid UserId { get; init; }
     [QueryParam] public string? NewEmail { get; init; }
@@ -29,7 +29,7 @@ internal sealed class ChangeEmailEndpoint(
         AuthSchemes(AppAuthSchemes.Cookie);
         Description(d =>
         {
-            d.WithTags("Users");
+            d.WithTags("Auth");
             d.Produces(302);
         });
     }

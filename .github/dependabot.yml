@@ -43,7 +43,7 @@ updates:
           - "minor"
           - "patch"
 
-  - package-ecosystem: "gomod"
+  - package-ecosystem: "pip"
     directory: "/src/mPanel.Node"
     schedule:
       interval: "weekly"
@@ -53,7 +53,7 @@ updates:
       - "dependencies"
     open-pull-requests-limit: 5
     groups:
-      go-minor-patch:
+      python-minor-patch:
         patterns:
           - "*"
         update-types:

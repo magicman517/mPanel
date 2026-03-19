@@ -1,3 +1,11 @@
+export type PagedResponse<T> = {
+    items: T[]
+    page: number
+    pageSize: number
+    totalCount: number
+    totalPages: number
+}
+
 export type HealthResponse = {
     status: string
     totalDurationMs: number
@@ -70,4 +78,32 @@ export type ApiKey = {
     prefix: string
     name: string | null
     expiresAt: string | null
+}
+
+export type Node = {
+    id: string
+    name: string
+    tokenPrefix: string
+    scheme: 'Http' | 'Https' | string
+    address: string
+    port: number
+    alias: string | null
+    sftpPort: number
+    sftpAlias: string | null
+    maxMemoryMb: number | null
+    maxDiskMb: number | null
+    osName: string | null
+    architecture: string | null
+    cpuCores: number | null
+    totalMemoryMb: number | null
+    totalDiskMb: number | null
+    isMaintenanceMode: boolean
+    isActive: boolean
+    handshakeError: string | null
+    createdAt: string
+    updatedAt: string
+    lastHeartbeat: string | null
+    lastHeartbeatCpuUsage: number | null
+    lastHeartbeatMemoryMb: number | null
+    lastHeartbeatDiskMb: number | null
 }

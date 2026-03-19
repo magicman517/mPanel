@@ -7,7 +7,13 @@ export const updatePanelSettingsSchema = v.object({
         v.nonEmpty('Name is required'),
         v.maxLength(32, 'Name is too long'),
     ),
-    url: v.optional(v.pipe(v.string(), v.trim(), v.url('Invalid url'))),
+    url: v.optional(
+        v.pipe(
+            v.string(),
+            v.trim(),
+            v.transform((v) => v || undefined),
+        ),
+    ),
     allowRegistration: v.boolean(),
     allowAccountSelfDeletion: v.boolean(),
     smtp: v.object({

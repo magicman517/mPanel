@@ -1,8 +1,6 @@
-<script setup lang="ts">
-const currentUserStore = useCurrentUserStore()
-</script>
-
 <template>
-    <SettingsProfileUpdateProfileDataForm />
-    <SettingsProfileDangerZone />
+    <div class="flex flex-col gap-4">
+        <SettingsProfileUpdateProfileDataForm />
+        <SettingsProfileDangerZone />
+    </div>
 </template>

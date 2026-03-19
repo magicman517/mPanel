@@ -18,7 +18,7 @@ namespace mPanel.API.Infrastructure.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.3")
+                .HasAnnotation("ProductVersion", "10.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -281,6 +281,103 @@ namespace mPanel.API.Infrastructure.Persistence.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("mPanel.API.Core.Entities.Node", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Alias")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Architecture")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("CpuCores")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("HandshakeError")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsMaintenanceMode")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("LastHeartbeat")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<double?>("LastHeartbeatCpuUsage")
+                        .HasColumnType("double precision");
+
+                    b.Property<decimal?>("LastHeartbeatDiskMb")
+                        .HasColumnType("numeric(20,0)");
+
+                    b.Property<decimal?>("LastHeartbeatMemoryMb")
+                        .HasColumnType("numeric(20,0)");
+
+                    b.Property<decimal?>("MaxDiskMb")
+                        .HasColumnType("numeric(20,0)");
+
+                    b.Property<decimal?>("MaxMemoryMb")
+                        .HasColumnType("numeric(20,0)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("OsName")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Port")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Scheme")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("SftpAlias")
+                        .HasColumnType("text");
+
+                    b.Property<int>("SftpPort")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("TokenHash")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("TokenPrefix")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<decimal?>("TotalDiskMb")
+                        .HasColumnType("numeric(20,0)");
+
+                    b.Property<decimal?>("TotalMemoryMb")
+                        .HasColumnType("numeric(20,0)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("TokenPrefix")
+                        .IsUnique();
+
+                    b.ToTable("Nodes");
                 });
 
             modelBuilder.Entity("mPanel.API.Core.Entities.PanelSettings", b =>

@@ -45,6 +45,11 @@ export const useAuthStore = defineStore('auth', () => {
         })
     }
 
+    async function signOutAndNavigate() {
+        await signOut()
+        await navigateTo('/auth', { external: true })
+    }
+
     return {
         session,
         isAuthenticated,
@@ -53,5 +58,6 @@ export const useAuthStore = defineStore('auth', () => {
         signIn,
         signUp,
         signOut,
+        signOutAndNavigate,
     }
 })

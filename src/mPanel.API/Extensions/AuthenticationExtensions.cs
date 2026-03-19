@@ -19,6 +19,7 @@ public static class AuthenticationExtensions
                     options.DefaultSignInScheme = IdentityConstants.ApplicationScheme;
                 })
                 .AddScheme<AuthenticationSchemeOptions, ApiKeyAuthenticationHandler>(AppAuthSchemes.ApiKey, null)
+                .AddScheme<AuthenticationSchemeOptions, NodeTokenAuthenticationHandler>(AppAuthSchemes.NodeToken, null)
                 .AddCookie(IdentityConstants.ApplicationScheme, options =>
                 {
                     options.Cookie.Name = "mPanel.Session";

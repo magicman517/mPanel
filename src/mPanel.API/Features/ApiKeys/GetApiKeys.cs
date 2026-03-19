@@ -7,7 +7,7 @@ using mPanel.API.Infrastructure.Persistence;
 
 namespace mPanel.API.Features.ApiKeys;
 
-internal sealed class GetApiKeysEndpoint(PanelDbContext dbContext) : EndpointWithoutRequest<IEnumerable<ApiKeyDto>>
+internal sealed class GetApiKeysEndpoint(PanelDbContext dbContext) : EndpointWithoutRequest<IReadOnlyCollection<ApiKeyDto>>
 {
     public override void Configure()
     {
@@ -16,7 +16,7 @@ internal sealed class GetApiKeysEndpoint(PanelDbContext dbContext) : EndpointWit
         Description(d =>
         {
             d.WithTags("API Keys");
-            d.Produces<IEnumerable<ApiKeyDto>>();
+            d.Produces<IReadOnlyCollection<ApiKeyDto>>();
         });
     }
 
@@ -30,13 +30,7 @@ internal sealed class GetApiKeysEndpoint(PanelDbContext dbContext) : EndpointWit
 
         var apiKeys = await dbContext.ApiKeys
             .Where(k => k.UserId == userId)
-            .Select(k => new ApiKeyDto
-            {
-                Id = k.Id,
-                Name = k.Name,
-                Prefix = k.Prefix,
-                ExpiresAt = k.ExpiresAt
-            })
+            .Select(ApiKeyDto.FromEntity)
             .ToListAsync(ct);
 
         await Send.OkAsync(apiKeys, ct);

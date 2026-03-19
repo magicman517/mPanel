@@ -13,7 +13,7 @@ const { data, error, refresh } = await useFetch<PanelSettings>('/api/settings', 
 
 const formState = reactive({
     name: data.value!.name,
-    url: data.value?.url ?? undefined,
+    url: data.value?.url || undefined,
     allowRegistration: data.value!.allowRegistration,
     allowAccountSelfDeletion: data.value!.allowAccountSelfDeletion,
     smtp: {
@@ -124,7 +124,7 @@ async function onSubmit(payload: FormSubmitEvent<UpdatePanelSettingsSchema>) {
             >
                 <UInput
                     v-model="formState.url"
-                    type="url"
+                    type="text"
                     autocomplete="off"
                     placeholder="https://mPanel.example.com"
                     class="w-full"

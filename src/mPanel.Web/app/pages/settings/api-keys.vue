@@ -102,11 +102,11 @@ async function createKey() {
 
             <div v-else class="flex flex-col gap-4">
                 <UAlert
-                    color="warning"
-                    variant="subtle"
-                    icon="i-lucide-triangle-alert"
                     title="Copy your key now"
                     description="This is the only time your API key will be visible. It cannot be recovered once you close this dialog."
+                    color="info"
+                    variant="outline"
+                    icon="i-lucide-triangle-alert"
                 />
 
                 <UFormField label="Your API key">

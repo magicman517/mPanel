@@ -29,12 +29,12 @@ internal sealed class UpdatePanelSettingsRequestValidator : Validator<UpdatePane
             .MaximumLength(32).WithMessage("Name must be at most 32 characters long");
 
         RuleFor(x => x.Url)
-            .NotEmpty().WithMessage("Panel URL cannot be empty")
-            .When(x => x.Url is not null);
+            .Must(uri => uri!.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps)
+            .WithMessage("Panel URL must start with 'http://' or 'https://'")
+            .When(x => x.Url != null);
 
         RuleFor(x => x.Smtp.Port)
-            .GreaterThan(0).WithMessage("SMTP Port must be greater than 0")
-            .LessThan(65536).WithMessage("SMTP Port must be less than 65536");
+            .InclusiveBetween(1, 65535).WithMessage("SMTP Port must be between 1 and 65535");
     }
 }
 
@@ -45,7 +45,7 @@ internal sealed class UpdatePanelSettingsEndpoint(PanelDbContext dbContext)
     {
         Put("/settings");
         AuthSchemes(AppAuthSchemes.Cookie, AppAuthSchemes.ApiKey);
-        Roles("Admin");
+        Roles(AppRoles.Admin);
         Description(d =>
         {
             d.WithTags("Settings");
@@ -58,7 +58,7 @@ internal sealed class UpdatePanelSettingsEndpoint(PanelDbContext dbContext)
         var settings = await dbContext.PanelSettings.FirstAsync(ct);
 
         settings.Name = req.Name;
-        settings.Url = req.Url?.ToString();
+        settings.Url = req.Url?.ToString().TrimEnd('/');
         settings.AllowRegistration = req.AllowRegistration;
         settings.AllowAccountSelfDeletion = req.AllowAccountSelfDeletion;
         settings.Smtp = req.Smtp;

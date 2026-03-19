@@ -2,6 +2,10 @@
 import type { CommandPaletteItem, NavigationMenuItem } from '@nuxt/ui'
 import type { FetchError } from 'ofetch'
 
+defineShortcuts({
+    s: () => (collapsed.value = !collapsed.value),
+})
+
 const authStore = useAuthStore()
 const currentUserStore = useCurrentUserStore()
 
@@ -16,6 +20,7 @@ try {
 }
 
 const open = ref(false)
+const collapsed = ref(false)
 
 const links: NavigationMenuItem[][] = [
     [
@@ -75,6 +80,7 @@ const groups = computed(() => [
         <UDashboardSidebar
             :ui="{ footer: 'lg:border-t lg:border-default' }"
             v-model:open="open"
+            v-model:collapsed="collapsed"
             id="default"
             class="bg-elevated/25"
             collapsible
