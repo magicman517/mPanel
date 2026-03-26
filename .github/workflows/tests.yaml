@@ -41,7 +41,7 @@ jobs:
         run: dotnet test tests/mPanel.Tests.API/mPanel.Tests.API.csproj --no-build --verbosity normal --logger "trx;LogFileName=api-tests-report.trx"
 
       - name: Publish report
-        uses: dorny/test-reporter@v2
+        uses: dorny/test-reporter@v3
         if: always()
         with:
           name: Integration tests
@@ -90,7 +90,7 @@ jobs:
           retention-days: 30
 
       - name: Publish report
-        uses: dorny/test-reporter@v2
+        uses: dorny/test-reporter@v3
         if: always()
         with:
           name: Browser tests
